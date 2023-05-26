@@ -1,18 +1,16 @@
 import { useState, useMemo } from "react";
-import cl100k_base from "gpt-tokenizer/cjs/encoding/cl100k_base.js";
-import p50k_base from "gpt-tokenizer/cjs/encoding/p50k_base.js";
-import r50k_base from "gpt-tokenizer/cjs/encoding/r50k_base.js";
-import p50k_edit from "gpt-tokenizer/cjs/encoding/p50k_edit.js";
+import cl100k_base from "gpt-tokenizer/esm/encoding/cl100k_base";
+import p50k_base from "gpt-tokenizer/esm/encoding/p50k_base";
+import r50k_base from "gpt-tokenizer/esm/encoding/r50k_base";
+import p50k_edit from "gpt-tokenizer/esm/encoding/p50k_edit";
 import type React from "react";
 import "./styles.css";
-import GitHubLogo from "./GitHub_Logo.png"; // replace with the path to the GitHub logo image
-// import NPMLogo from './NPMLogo.png'; // replace with the path to the NPM logo image
 
 const tokenizers = {
   cl100k_base,
   p50k_base,
   r50k_base,
-  p50k_edit
+  p50k_edit,
 };
 
 const pastelColors = [
@@ -20,14 +18,14 @@ const pastelColors = [
   "rgba(104,222,122,.4)",
   "rgba(244,172,54,.4)",
   "rgba(239,65,70,.4)",
-  "rgba(39,181,234,.4)"
+  "rgba(39,181,234,.4)",
 ];
 
 const monospace = `"Roboto Mono",sfmono-regular,consolas,liberation mono,menlo,courier,monospace`;
 
 const TextInput = ({
   value,
-  onChange
+  onChange,
 }: {
   value: string;
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
@@ -51,7 +49,7 @@ const TokenizedText = ({ tokens }: { tokens: (string | number)[] }) => (
       border: "1px solid #ccc",
       backgroundColor: "#f8f8f8",
       lineHeight: "1.5",
-      alignContent: "flex-start"
+      alignContent: "flex-start",
     }}
   >
     {tokens.map((token, index) => (
@@ -64,7 +62,7 @@ const TokenizedText = ({ tokens }: { tokens: (string | number)[] }) => (
           marginRight: "0px",
           marginBottom: "4px",
           display: "inline-block",
-          height: "1.5em"
+          height: "1.5em",
         }}
       >
         {
@@ -87,9 +85,8 @@ const App = () => {
   );
   const [displayTokens, setDisplayTokens] = useState(false);
 
-  const [selectedEncoding, setSelectedEncoding] = useState<Encoding>(
-    "cl100k_base"
-  );
+  const [selectedEncoding, setSelectedEncoding] =
+    useState<Encoding>("cl100k_base");
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedEncoding(event.target.value as Encoding);
@@ -165,7 +162,7 @@ const App = () => {
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "right"
+            justifyContent: "right",
           }}
         >
           <a href="https://www.npmjs.com/package/gpt-tokenizer" target="_blank">
@@ -174,9 +171,9 @@ const App = () => {
               alt="NPM logo"
             />
           </a>
-          <a href="https://github.com/niieani/gpt-tokenizer" target="_blank">
+          {/* <a href="https://github.com/niieani/gpt-tokenizer" target="_blank">
             <img src={GitHubLogo} alt="GitHub logo" width="100" />
-          </a>
+          </a> */}
         </div>
       </div>
     </>
