@@ -6,6 +6,7 @@ import p50k_edit from "gpt-tokenizer/encoding/p50k_edit";
 import type React from "react";
 import GitHubLogo from "./assets/GitHub_Logo.png";
 import "./App.css";
+import Stat, { PriceStats } from './Stat';
 
 const tokenizers = {
   cl100k_base,
@@ -156,8 +157,9 @@ const App = () => {
         </button>
 
         <div className="statistics">
-          <div>Characters: {inputText.length}</div>
-          <div>Tokens: {encodedTokens.length}</div>
+          <Stat key="Characters" displayValue={inputText.length} label="Characters" />
+          <Stat key="Tokens" displayValue={encodedTokens.length} label="Tokens" />
+          <PriceStats tokens={encodedTokens.length} />
         </div>
         <div
           style={{
