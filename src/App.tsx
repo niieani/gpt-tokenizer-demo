@@ -1,10 +1,11 @@
 import { useState, useMemo } from "react";
-import cl100k_base from "gpt-tokenizer/esm/encoding/cl100k_base";
-import p50k_base from "gpt-tokenizer/esm/encoding/p50k_base";
-import r50k_base from "gpt-tokenizer/esm/encoding/r50k_base";
-import p50k_edit from "gpt-tokenizer/esm/encoding/p50k_edit";
+import cl100k_base from "gpt-tokenizer/encoding/cl100k_base";
+import p50k_base from "gpt-tokenizer/encoding/p50k_base";
+import r50k_base from "gpt-tokenizer/encoding/r50k_base";
+import p50k_edit from "gpt-tokenizer/encoding/p50k_edit";
 import type React from "react";
-import "./styles.css";
+import GitHubLogo from "./assets/GitHub_Logo.png";
+import "./App.css";
 
 const tokenizers = {
   cl100k_base,
@@ -81,7 +82,7 @@ type Encoding = "cl100k_base" | "p50k_base" | "p50k_edit" | "r50k_base";
 
 const App = () => {
   const [inputText, setInputText] = useState(
-    "Welcome to gpt-tokenizer. Replace this with your text to see how tokenization works."
+    "Welcome to gpt-tokenizer. Replace this with your text to see how tokenization works.",
   );
   const [displayTokens, setDisplayTokens] = useState(false);
 
@@ -171,9 +172,9 @@ const App = () => {
               alt="NPM logo"
             />
           </a>
-          {/* <a href="https://github.com/niieani/gpt-tokenizer" target="_blank">
+          <a href="https://github.com/niieani/gpt-tokenizer" target="_blank">
             <img src={GitHubLogo} alt="GitHub logo" width="100" />
-          </a> */}
+          </a>
         </div>
       </div>
     </>
