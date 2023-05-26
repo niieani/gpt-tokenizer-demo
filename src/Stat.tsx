@@ -10,7 +10,7 @@ const formatter = new Intl.NumberFormat("en-US", {
 
 const pricePerToken = {
   'gpt-3.5-turbo': 0.006 / 1000,
-  'gpt4': {
+  'gpt-4': {
     prompt: 0.03 / 1000,
     completion: 0.06 / 1000,
   },
