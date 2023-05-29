@@ -1,3 +1,5 @@
+import { Encoding } from './App';
+import { modelToEncodingMap, ModelName } from 'gpt-tokenizer/mapping';
 interface StatProps {
   label: string;
   displayValue: string | number;
@@ -8,18 +10,40 @@ const formatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
 });
 
-const pricePerToken = {
-  'gpt-3.5-turbo': 0.006 / 1000,
+type Price = Record<ModelName, {
+  description: string;
+  price: number | {
+    prompt: number;
+    completion: number;
+  }
+}>
+const pricePerToken: Price  = {
+  'gpt-3.5-turbo': {
+    description: 'GPT-3.5 Turbo Chat',
+    price: 0.006 / 1000
+  },
   'gpt-4': {
-    prompt: 0.03 / 1000,
-    completion: 0.06 / 1000,
+    description: 'GPT-4 Chat',
+    price: {
+      prompt: 0.03 / 1000,
+      completion: 0.06 / 1000,
+    }
   },
   'gpt-4-32k': {
-    prompt: 0.06 / 1000,
-    completion: 0.12 / 1000,
+    description: 'GPT-4 32k Chat',
+    price: {
+      prompt: 0.06 / 1000,
+      completion: 0.12 / 1000,
+    }
   },
-  'claude-v1': 32.68 / 1000000, // ($32.68/million tokens)
-  'claude-instant-v1': 5.51 / 1000000, // ($5.51/million tokens)
+  // Embeddings
+  'text-embedding-ada-002': {
+    description: 'Ada V2 Embeddings',
+    price: 0.0002 / 1000,
+  }
+  // Disabled until Anthropic SDK has a token count method
+  // 'claude-v1': 32.68 / 1000000, // ($32.68/million tokens)
+  // 'claude-instant-v1': 5.51 / 1000000, // ($5.51/million tokens)
 };
 
 export default function Stat({ label, displayValue }: StatProps) {
@@ -47,16 +71,24 @@ function displayPrice(input: number) {
   return displayAsDollars(input);
 }
 
-export function PriceStats({ tokens }: { tokens: number }) {
+export function PriceStats({ tokens, encoding }: { tokens: number, encoding: Encoding }) {
   return <>
-    {Object.entries(pricePerToken).map(([model, price]) => {
+
+    {Object.entries(pricePerToken)
+      // filter for models that support the current encoding
+      .filter(([model, details]) => {
+        // The current model is
+        return modelToEncodingMap[model as ModelName] === encoding
+      })
+      // Loop over a display
+      .map(([model, { price, description }]) => {
       if(typeof price === 'object') {
         return <>
-          <Stat key={`${model}-prompt`} displayValue={displayPrice(price.prompt * tokens)} label={`${model} prompt`} />
-          <Stat key={`${model}-completion`} displayValue={displayPrice(price.completion * tokens)} label={`${model} completion`} />
+          <Stat key={`${model}-prompt`} displayValue={displayPrice(price.prompt * tokens)} label={`${description} Prompt`} />
+          <Stat key={`${model}-completion`} displayValue={displayPrice(price.completion * tokens)} label={`${description} Completion`} />
         </>
       }
-      return <Stat key={model} displayValue={displayPrice(price * tokens)} label={model} />
+        return <Stat key={model} displayValue={displayPrice(price * tokens)} label={description} />
     })}
   </>
 }

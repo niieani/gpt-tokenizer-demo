@@ -79,7 +79,7 @@ const TokenizedText = ({ tokens }: { tokens: (string | number)[] }) => (
   </div>
 );
 
-type Encoding = "cl100k_base" | "p50k_base" | "p50k_edit" | "r50k_base";
+export type Encoding = "cl100k_base" | "p50k_base" | "p50k_edit" | "r50k_base";
 
 const App = () => {
   const [inputText, setInputText] = useState(
@@ -159,7 +159,7 @@ const App = () => {
         <div className="statistics">
           <Stat key="Characters" displayValue={inputText.length} label="Characters" />
           <Stat key="Tokens" displayValue={encodedTokens.length} label="Tokens" />
-          <PriceStats tokens={encodedTokens.length} />
+          <PriceStats encoding={selectedEncoding} tokens={encodedTokens.length} />
         </div>
         <div
           style={{
