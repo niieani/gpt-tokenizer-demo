@@ -177,4 +177,22 @@ input[type="button"]:hover {
 
 .statistics {
   margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+  justify-content: start;
+  margin-bottom: 20px;
+}
+
+.stat {
+  text-align: center;
+  display: inline-block;
+  border: 1px solid #f0f0f0;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.stat-value {
+  font-size: 25px;
+  font-weight: 600;
 }
