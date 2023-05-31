@@ -1,5 +1,6 @@
 import { Encoding } from './App';
 import { modelToEncodingMap, ModelName } from 'gpt-tokenizer/mapping';
+
 interface StatProps {
   label: string;
   displayValue: string | number;
@@ -10,27 +11,64 @@ const formatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
 });
 
-type Price = Record<ModelName, {
+const modelToEncodingMapWith32k = {
+  ...modelToEncodingMap,
+  'gpt-4-32k': modelToEncodingMap['gpt-4'],
+}
+
+type Price = Partial<Record<keyof typeof modelToEncodingMapWith32k, {
   description: string;
-  price: number | {
+  price: {
     prompt: number;
     completion: number;
   }
-}>
+}>>
+
 const pricePerToken: Price  = {
+  "text-ada-001": {
+    description: 'Ada',
+    price: {
+      prompt: 0.0004 / 1000,
+      completion: 0.0004 / 1000,
+    },
+  },
+  "text-babbage-001": {
+    description: 'Babbage',
+    price: {
+      prompt: 0.0005 / 1000,
+      completion: 0.0005 / 1000,
+    },
+  },
+  "curie": {
+    description: 'Curie',
+    price: {
+      prompt: 0.0020 / 1000,
+      completion: 0.0020 / 1000,
+    },
+  },
+  "davinci": {
+    description: 'Curie',
+    price: {
+      prompt: 0.0200 / 1000,
+      completion: 0.0200 / 1000,
+    },
+  },
   'gpt-3.5-turbo': {
-    description: 'GPT-3.5 Turbo Chat',
-    price: 0.006 / 1000
+    description: 'GPT-3.5-Turbo (Chat)',
+    price: {
+      prompt: 0.006 / 1000,
+      completion: 0.006 / 1000,
+    }
   },
   'gpt-4': {
-    description: 'GPT-4 Chat',
+    description: 'GPT-4 (Chat)',
     price: {
       prompt: 0.03 / 1000,
       completion: 0.06 / 1000,
     }
   },
   'gpt-4-32k': {
-    description: 'GPT-4 32k Chat',
+    description: 'GPT-4 (32k Chat)',
     price: {
       prompt: 0.06 / 1000,
       completion: 0.12 / 1000,
@@ -39,7 +77,10 @@ const pricePerToken: Price  = {
   // Embeddings
   'text-embedding-ada-002': {
     description: 'Ada V2 Embeddings',
-    price: 0.0002 / 1000,
+    price: {
+      prompt: 0.0002 / 1000,
+      completion: 0.0002 / 1000,
+    },
   }
   // Disabled until Anthropic SDK has a token count method
   // 'claude-v1': 32.68 / 1000000, // ($32.68/million tokens)
@@ -54,8 +95,8 @@ export default function Stat({ label, displayValue }: StatProps) {
 }
 
 function displayAsCents(input: number)  {
-  if(input < 0.01) {
-    return '< 1¢';
+  if(input < 0.0001) {
+    return '< 0.01¢';
   }
   return `${Math.round(input * 1000) / 10}¢`;
 }
@@ -73,10 +114,9 @@ function displayPrice(input: number) {
 
 export function PriceStats({ tokens, encoding }: { tokens: number, encoding: Encoding }) {
   return <>
-
     {Object.entries(pricePerToken)
       // filter for models that support the current encoding
-      .filter(([model, details]) => {
+      .filter(([model]) => {
         // The current model is
         return modelToEncodingMap[model as ModelName] === encoding
       })
