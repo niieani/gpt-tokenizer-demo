@@ -1,0 +1,4 @@
+{
+  // Ensures VSCode uses locally installed typescript version that supports `"moduleResolution": "bundler"`
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
