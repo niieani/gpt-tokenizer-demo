@@ -5,9 +5,9 @@
   // Reflame uses this to identify your app.
   "appId": "01H21V4TMG6VNGJ4RP570A105C",
   // This is what shows up in the browser's tab bar.
-  "title": "Reflame App",
+  "title": "gpt-tokenizer.dev playground",
   // This is the description that shows up in Google search.
-  "description": "A new Reflame app.",
+  "description": "A playground app for gpt-tokenizer NPM package.",
   // Reflame will watch this directory for your React source code and deploy changes
   // instantly. 
   //
