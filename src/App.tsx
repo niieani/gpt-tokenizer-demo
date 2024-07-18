@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import o200k_base from "gpt-tokenizer/encoding/o200k_base";
 import cl100k_base from "gpt-tokenizer/encoding/cl100k_base";
 import p50k_base from "gpt-tokenizer/encoding/p50k_base";
 import r50k_base from "gpt-tokenizer/encoding/r50k_base";
@@ -6,9 +7,10 @@ import p50k_edit from "gpt-tokenizer/encoding/p50k_edit";
 import type React from "react";
 import GitHubLogo from "./assets/GitHub_Logo.png";
 import "./App.css";
-import Stat, { PriceStats } from './Stat';
+import Stat, { PriceStats } from "./Stat";
 
 const tokenizers = {
+  o200k_base,
   cl100k_base,
   p50k_base,
   r50k_base,
@@ -79,7 +81,12 @@ const TokenizedText = ({ tokens }: { tokens: (string | number)[] }) => (
   </div>
 );
 
-export type Encoding = "cl100k_base" | "p50k_base" | "p50k_edit" | "r50k_base";
+export type Encoding =
+  | "o200k_base"
+  | "cl100k_base"
+  | "p50k_base"
+  | "p50k_edit"
+  | "r50k_base";
 
 const App = () => {
   const [inputText, setInputText] = useState(
@@ -88,7 +95,7 @@ const App = () => {
   const [displayTokens, setDisplayTokens] = useState(false);
 
   const [selectedEncoding, setSelectedEncoding] =
-    useState<Encoding>("cl100k_base");
+    useState<Encoding>("o200k_base");
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedEncoding(event.target.value as Encoding);
@@ -117,6 +124,7 @@ const App = () => {
         value={selectedEncoding}
         onChange={handleChange}
       >
+        <option value="o200k_base">o200k_base (GPT-4o)</option>
         <option value="cl100k_base">
           cl100k_base (GPT-3.5-turbo and GPT-4)
         </option>
@@ -136,9 +144,16 @@ const App = () => {
         </a>{" "}
         playground!
       </h2>
-      The most feature-complete GPT token encoder/decoder, with support for
-      GPT-4.
+      The most feature-complete GPT token encoder/decoder with support for GPT-4
+      and GPT-4o.
       <br />
+      <iframe
+        src="https://github.com/sponsors/niieani/button"
+        title="Sponsor niieani"
+        height="32"
+        width="114"
+        style={{ border: 0, borderRadius: "6px" }}
+      ></iframe>
       <br />
       <div className="container">
         {selectEncoding}
@@ -157,9 +172,20 @@ const App = () => {
         </button>
 
         <div className="statistics">
-          <Stat key="Characters" displayValue={inputText.length} label="Characters" />
-          <Stat key="Tokens" displayValue={encodedTokens.length} label="Tokens" />
-          <PriceStats encoding={selectedEncoding} tokens={encodedTokens.length} />
+          <Stat
+            key="Characters"
+            displayValue={inputText.length}
+            label="Characters"
+          />
+          <Stat
+            key="Tokens"
+            displayValue={encodedTokens.length}
+            label="Tokens"
+          />
+          <PriceStats
+            encoding={selectedEncoding}
+            tokens={encodedTokens.length}
+          />
         </div>
         <div
           style={{
