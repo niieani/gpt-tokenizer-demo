@@ -1,5 +1,6 @@
+import { Fragment } from "react/jsx-runtime";
 import { Encoding } from "./App";
-import { pricingByEncoding } from "./pricing";
+import { modelsByEncoding } from "./pricing";
 
 interface StatProps {
   label: string;
@@ -25,10 +26,8 @@ export default function Stat({ label, displayValue }: StatProps) {
 }
 
 function displayAsCents(input: number) {
-  if (input < 0.0001) {
-    return "< 0.01¢";
-  }
-  return `${Math.round(input * 1000) / 10}¢`;
+  const cents = Math.round(input * 100);
+  return cents === 0 ? "< 0.01¢" : `${input.toFixed(2)}¢`;
 }
 
 function displayAsDollars(input: number) {
@@ -49,42 +48,46 @@ export function PriceStats({
   tokens: number;
   encoding: Encoding;
 }) {
-  const models = pricingByEncoding[encoding] ?? {};
+  const models = modelsByEncoding[encoding] ?? {};
 
   return (
     <>
       {Object.entries(models).map(
-        ([model, { humanName: humanReadableName, regular, batchApi }]) => (
-          <>
-            <Stat
-              key={`${model}-regular-input`}
-              displayValue={displayPrice((regular.input * tokens) / 1_000_000)}
-              label={`${humanReadableName} Regular Input`}
-            />
-            <Stat
-              key={`${model}-regular-output`}
-              displayValue={displayPrice((regular.output * tokens) / 1_000_000)}
-              label={`${humanReadableName} Regular Output`}
-            />
-            {batchApi.input !== null && (
+        ([model, { humanName: humanReadableName, cost }]) => (
+          <Fragment key={model}>
+            {cost?.input ? (
+              <Stat
+                key={`${model}-input`}
+                displayValue={displayPrice((cost.input * tokens) / 1_000_000)}
+                label={`${humanReadableName} Input`}
+              />
+            ) : undefined}
+            {cost?.output ? (
+              <Stat
+                key={`${model}-output`}
+                displayValue={displayPrice((cost.output * tokens) / 1_000_000)}
+                label={`${humanReadableName} Output`}
+              />
+            ) : undefined}
+            {cost?.batchInput ? (
               <Stat
                 key={`${model}-batch-input`}
                 displayValue={displayPrice(
-                  (batchApi.input * tokens) / 1_000_000,
+                  (cost.batchInput * tokens) / 1_000_000,
                 )}
                 label={`${humanReadableName} Batch Input`}
               />
-            )}
-            {batchApi.output !== null && (
+            ) : undefined}
+            {cost?.batchOutput ? (
               <Stat
                 key={`${model}-batch-output`}
                 displayValue={displayPrice(
-                  (batchApi.output * tokens) / 1_000_000,
+                  (cost.batchOutput * tokens) / 1_000_000,
                 )}
                 label={`${humanReadableName} Batch Output`}
               />
-            )}
-          </>
+            ) : undefined}
+          </Fragment>
         ),
       )}
     </>

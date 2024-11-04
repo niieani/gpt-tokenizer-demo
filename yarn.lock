@@ -1150,12 +1150,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-refresh@npm:^0.4.12":
-  version: 0.4.12
-  resolution: "eslint-plugin-react-refresh@npm:0.4.12"
+"eslint-plugin-react-refresh@npm:^0.4.14":
+  version: 0.4.14
+  resolution: "eslint-plugin-react-refresh@npm:0.4.14"
   peerDependencies:
     eslint: ">=7"
-  checksum: 10c0/33dd82450f7c5fa884c5c84ffaf9d9a8b363bc155432807dc09904c7db6ba724888fac4562b058268259aa7c9270b622ef411488011b3469a2add275ed5c2273
+  checksum: 10c0/427108008ffcc2e0be36897398e61a2fae54c5bf092af0171bc4cf1927080d40619bb07be02ecd7c515372210228cf849023997cfa0252d37115f9b0c0debcd2
   languageName: node
   linkType: hard
 
@@ -1524,8 +1524,8 @@ __metadata:
     "@vitejs/plugin-react-swc": "npm:^3.7.1"
     eslint: "npm:^8.57.1"
     eslint-plugin-react-hooks: "npm:^4.6.2"
-    eslint-plugin-react-refresh: "npm:^0.4.12"
-    gpt-tokenizer: "npm:^2.5.1"
+    eslint-plugin-react-refresh: "npm:^0.4.14"
+    gpt-tokenizer: "npm:^2.6.0"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     remeda: "npm:^2.16.0"
@@ -1534,10 +1534,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"gpt-tokenizer@npm:^2.5.1":
-  version: 2.5.1
-  resolution: "gpt-tokenizer@npm:2.5.1"
-  checksum: 10c0/964101e631db516126bd8de595d90babab35ad6e1c2f132c5b554410ad0e7e802a096fe3d59b2b70c9532edbee8e73ff9034ce5ae220ba71dfc44f0fb4692667
+"gpt-tokenizer@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "gpt-tokenizer@npm:2.6.0"
+  checksum: 10c0/8edb766dbeb37f1df7e10851cf91f6c98c59be13a0fd63254142f17c9b2ad8c027e076e5998126d3acbe5c6cd5c13fed23a0cf82dac0eae1ebccd6a7b642262e
   languageName: node
   linkType: hard
 

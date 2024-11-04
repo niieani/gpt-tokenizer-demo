@@ -1,21 +1,8 @@
-import { useState, useMemo } from "react";
-import o200k_base from "gpt-tokenizer/encoding/o200k_base";
-import cl100k_base from "gpt-tokenizer/encoding/cl100k_base";
-import p50k_base from "gpt-tokenizer/encoding/p50k_base";
-import r50k_base from "gpt-tokenizer/encoding/r50k_base";
-import p50k_edit from "gpt-tokenizer/encoding/p50k_edit";
+import { useState, useMemo, useEffect } from "react";
 import type React from "react";
 import GitHubLogo from "./assets/GitHub_Logo.png";
 import "./App.css";
 import Stat, { PriceStats } from "./Stat";
-
-const tokenizers = {
-  o200k_base,
-  cl100k_base,
-  p50k_base,
-  r50k_base,
-  p50k_edit,
-};
 
 const pastelColors = [
   "rgba(107,64,216,.3)",
@@ -93,18 +80,37 @@ const App = () => {
     "Welcome to gpt-tokenizer. Replace this with your text to see how tokenization works.",
   );
   const [displayTokens, setDisplayTokens] = useState(false);
-
   const [selectedEncoding, setSelectedEncoding] =
     useState<Encoding>("o200k_base");
+  const [api, setApi] = useState<null | typeof import("gpt-tokenizer")>(null);
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedEncoding(event.target.value as Encoding);
+  const loadEncoding = async (encoding: Encoding) => {
+    try {
+      const module = await import(`./encodings/${encoding}.ts`);
+      setApi(module.default);
+    } catch (error) {
+      console.error(`Failed to load encoding ${encoding}:`, error);
+    }
   };
 
-  const api = tokenizers[selectedEncoding];
-  const encodedTokens = api.encode(inputText);
+  const handleChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const encoding = event.target.value as Encoding;
+    setSelectedEncoding(encoding);
+    await loadEncoding(encoding);
+  };
+
+  useEffect(() => {
+    loadEncoding(selectedEncoding);
+  }, []);
+
+  const encodedTokens = useMemo(() => {
+    return api?.encode(inputText) ?? [];
+  }, [api, inputText]);
 
   const decodedTokens = useMemo(() => {
+    if (!api) {
+      return [];
+    }
     const tokens = [];
     for (const token of api.decodeGenerator(encodedTokens)) {
       tokens.push(token);
@@ -144,8 +150,8 @@ const App = () => {
         </a>{" "}
         playground!
       </h2>
-      The most feature-complete GPT token encoder/decoder with support for GPT-4
-      and GPT-4o.
+      The most feature-complete GPT token encoder/decoder with support for
+      OpenAI models: o1, GPT-4o and GPT-4, GPT-3.5 and others.
       <br />
       <iframe
         src="https://github.com/sponsors/niieani/button"
@@ -182,6 +188,8 @@ const App = () => {
             displayValue={encodedTokens.length}
             label="Tokens"
           />
+        </div>
+        <div className="statistics">
           <PriceStats
             encoding={selectedEncoding}
             tokens={encodedTokens.length}
